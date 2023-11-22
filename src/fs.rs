@@ -43,7 +43,7 @@ impl<'a> DirMetadata<'a> {
     }
 
     /// Returns an error if the directory cannot be accessed
-    pub async fn dir_metadata(mut self) -> Result<Self, io::Error> {
+    pub async fn dir_metadata(mut self) -> Result<DirMetadata<'a>, io::Error> {
         let mut dir = read_dir(&self.path).await?;
 
         self.iter_dir(&mut dir).await;
