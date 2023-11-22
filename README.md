@@ -1,4 +1,5 @@
 ### FsMeta
+![crates.io](https://img.shields.io/crates/v/dir-meta.svg) [![Docs](https://docs.rs/dir-meta/badge.svg)](https://docs.rs/puppeteer)[![Rust](https://github.com/448-engineering/DirMeta/actions/workflows/rust.yml/badge.svg)](https://github.com/448-engineering/DirMeta/actions/workflows/rust.yml)
 This crate adds the ability to recursively walk through a directory in an async fashion. The result is metadata about the directory which currently includes:
 
 - [x] Get the total size of the directory in bytes
