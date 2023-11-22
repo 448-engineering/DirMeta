@@ -1,7 +1,13 @@
 [package]
 name = "dir-meta"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
+authors = ["448 OG <superuser@448.africa>"]
+description = "Read a directory and get back all files and errors from the read operation"
+categories = ["filesystem"]
+keywords = ["recursion", "directory", "files", "async"]
+homepage = "https://github.com/448-engineering/DirMeta.git"
+repository = "https://github.com/448-engineering/DirMeta.git"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
