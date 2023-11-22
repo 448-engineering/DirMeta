@@ -1,8 +1,8 @@
+#[cfg(feature = "time")]
 use chrono::{DateTime, Utc};
-use std::{
-    borrow::Cow,
-    time::{Duration, SystemTime},
-};
+#[cfg(feature = "time")]
+use std::time::Duration;
+use std::{borrow::Cow, time::SystemTime};
 use tai64::Tai64N;
 
 pub type CowStr<'a> = Cow<'a, str>;
@@ -21,6 +21,7 @@ impl FsUtils {
     }
 
     /// Convert TAI64N to local time in 24 hour format
+    #[cfg(feature = "time")]
     pub fn tai64_to_local_hrs<'a>(time: &Tai64N) -> DateTimeString<'a> {
         let date_time: DateTime<Utc> = time.to_system_time().into();
         let date = date_time
@@ -35,6 +36,7 @@ impl FsUtils {
     }
 
     /// Convert TAI64N to local time in 12 hour format
+    #[cfg(feature = "time")]
     pub fn tai64_to_local_am_pm<'a>(time: &Tai64N) -> DateTimeString<'a> {
         let date_time: DateTime<Utc> = time.to_system_time().into();
         let date = date_time
@@ -49,24 +51,28 @@ impl FsUtils {
     }
 
     /// Convert duration since UNIX EPOCH to humantime
+    #[cfg(feature = "time")]
     pub fn tai64_to_humantime_with_epoch(time: &Tai64N) -> Option<String> {
         FsUtils::tai64_duration_since_epoch(time)
             .map(|duration| humantime::format_duration(duration).to_string())
     }
 
     /// Convert duration since two TAI64N timestamps to humantime
+    #[cfg(feature = "time")]
     pub fn tai64_to_humantime(earlier_time: &Tai64N, current_time: &Tai64N) -> Option<String> {
         FsUtils::tai64_duration(earlier_time, current_time)
             .map(|duration| humantime::format_duration(duration).to_string())
     }
 
     /// Convert duration between current time and earlier TAI64N timestamp to humantime
+    #[cfg(feature = "time")]
     pub fn tai64_now_duration_to_humantime(earlier_time: &Tai64N) -> Option<String> {
         FsUtils::tai64_duration_from_now(earlier_time)
             .map(|duration| humantime::format_duration(duration).to_string())
     }
 
     /// Get the duration between two TAI64N timestamps
+    #[cfg(feature = "time")]
     pub fn tai64_duration(earlier_time: &Tai64N, current_time: &Tai64N) -> Option<Duration> {
         match earlier_time.duration_since(current_time) {
             Ok(valid_time) => Some(valid_time),
@@ -75,6 +81,7 @@ impl FsUtils {
     }
 
     /// Get the duration since UNIX EPOCH
+    #[cfg(feature = "time")]
     pub fn tai64_duration_since_epoch(time: &Tai64N) -> Option<Duration> {
         match time.duration_since(&Tai64N::UNIX_EPOCH) {
             Ok(valid_time) => Some(valid_time),
@@ -83,6 +90,7 @@ impl FsUtils {
     }
 
     /// Get the duration since UNIX EPOCH
+    #[cfg(feature = "time")]
     pub fn tai64_duration_from_now(earlier_time: &Tai64N) -> Option<Duration> {
         match Tai64N::now().duration_since(earlier_time) {
             Ok(valid_time) => Some(valid_time),
@@ -91,6 +99,7 @@ impl FsUtils {
     }
 }
 
+#[cfg(feature = "time")]
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Default)]
 pub struct DateTimeString<'a> {
     date: CowStr<'a>,

@@ -1,4 +1,4 @@
-use crate::{CowStr, DateTimeString, FsUtils};
+use crate::{CowStr, FsUtils};
 use async_fs::{read_dir, ReadDir};
 use async_recursion::async_recursion;
 use file_format::FileFormat;
@@ -11,6 +11,9 @@ use std::{
     path::{Path, PathBuf},
 };
 use tai64::Tai64N;
+
+#[cfg(feature = "time")]
+use crate::DateTimeString;
 
 #[derive(Debug, PartialEq, Eq, Default, Clone)]
 pub struct DirMetadata<'a> {
@@ -84,11 +87,11 @@ impl<'a> DirMetadata<'a> {
                         directories.push(entry.path())
                     } else {
                         let mut file_meta = FileMetadata::default();
+
                         let format = match FileFormat::from_file(entry.path()) {
                             Ok(format_detected) => format_detected,
                             Err(_) => FileFormat::default(),
                         };
-
                         file_meta.file_format = format;
 
                         file_meta.name =
@@ -197,6 +200,7 @@ impl<'a> FileMetadata<'a> {
     pub fn size(&self) -> usize {
         self.size
     }
+
     pub fn formatted_size(&self) -> String {
         FsUtils::size_to_bytes(self.size)
     }
@@ -205,38 +209,47 @@ impl<'a> FileMetadata<'a> {
         self.accessed
     }
 
+    #[cfg(feature = "time")]
     pub fn accessed_24hr(&self) -> Option<DateTimeString<'a>> {
         Some(FsUtils::tai64_to_local_hrs(&self.accessed?))
     }
 
+    #[cfg(feature = "time")]
     pub fn accessed_am_pm(&self) -> Option<DateTimeString<'a>> {
         Some(FsUtils::tai64_to_local_am_pm(&self.accessed?))
     }
 
+    #[cfg(feature = "time")]
     pub fn accessed_humatime(&self) -> Option<String> {
         FsUtils::tai64_now_duration_to_humantime(&self.accessed?)
     }
 
+    #[cfg(feature = "time")]
     pub fn modified_24hr(&self) -> Option<DateTimeString<'a>> {
         Some(FsUtils::tai64_to_local_hrs(&self.modified?))
     }
 
+    #[cfg(feature = "time")]
     pub fn modified_am_pm(&self) -> Option<DateTimeString<'a>> {
         Some(FsUtils::tai64_to_local_am_pm(&self.modified?))
     }
 
+    #[cfg(feature = "time")]
     pub fn modified_humatime(&self) -> Option<String> {
         FsUtils::tai64_now_duration_to_humantime(&self.modified?)
     }
 
+    #[cfg(feature = "time")]
     pub fn created_24hr(&self) -> Option<DateTimeString<'a>> {
         Some(FsUtils::tai64_to_local_hrs(&self.created?))
     }
 
+    #[cfg(feature = "time")]
     pub fn created_am_pm(&self) -> Option<DateTimeString<'a>> {
         Some(FsUtils::tai64_to_local_am_pm(&self.created?))
     }
 
+    #[cfg(feature = "time")]
     pub fn created_humatime(&self) -> Option<String> {
         FsUtils::tai64_now_duration_to_humantime(&self.created?)
     }
