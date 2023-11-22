@@ -1,3 +1,7 @@
+#![deny(unsafe_code)]
+#![forbid(missing_docs)]
+#![doc = include_str!("../README.md")]
+
 mod utils;
 pub use utils::*;
 

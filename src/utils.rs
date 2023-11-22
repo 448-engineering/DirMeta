@@ -5,8 +5,10 @@ use std::time::Duration;
 use std::{borrow::Cow, time::SystemTime};
 use tai64::Tai64N;
 
+/// Reusable Clone-on-Write str with lifetime of `'a`
 pub type CowStr<'a> = Cow<'a, str>;
 
+/// A convenience struct to access utilities
 pub struct FsUtils;
 
 impl FsUtils {
@@ -99,9 +101,12 @@ impl FsUtils {
     }
 }
 
+/// The data and time in human readable [String]
 #[cfg(feature = "time")]
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Default)]
 pub struct DateTimeString<'a> {
-    date: CowStr<'a>,
-    time: CowStr<'a>,
+    /// The data without a timestamp
+    pub date: CowStr<'a>,
+    /// A timestamp without a date
+    pub time: CowStr<'a>,
 }
