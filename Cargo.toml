@@ -1,6 +1,6 @@
 [package]
 name = "dir-meta"
-version = "0.3.1"
+version = "0.4.1"
 license = "Apache-2.0"
 edition = "2021"
 authors = ["448 OG <superuser@448.africa>"]
@@ -13,7 +13,7 @@ repository = "https://github.com/448-engineering/DirMeta.git"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-file-format = { version = "0.22.0", features = [
+file-format = { version = "0.23.0", features = [
     "reader",
     "reader-asf",
     "reader-cfb",

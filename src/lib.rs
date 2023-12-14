@@ -8,6 +8,16 @@ pub use utils::*;
 mod fs;
 pub use fs::*;
 
+pub use async_recursion;
+pub use byte_prefix;
+#[cfg(feature = "time")]
+pub use chrono;
+pub use file_format;
+#[cfg(feature = "time")]
+pub use humantime;
+pub use smol;
+pub use tai64;
+
 #[cfg(test)]
 mod sanity_checks {
     #[test]
