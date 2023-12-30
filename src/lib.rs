@@ -14,9 +14,6 @@ mod watcher;
 #[cfg(feature = "time")]
 pub use watcher::*;
 
-#[cfg(feature = "watcher")]
-pub use async_dup;
-
 pub use async_recursion;
 pub use byte_prefix;
 #[cfg(feature = "time")]

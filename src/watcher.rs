@@ -1,4 +1,3 @@
-use async_dup::Arc;
 use inotify::{EventMask, Inotify, WatchMask};
 use smol::{channel::Sender, io};
 use std::{
@@ -88,10 +87,10 @@ impl FsWatcher {
                 }
             }
         } else {
-            return Err(io::Error::new(
+            Err(io::Error::new(
                 io::ErrorKind::NotFound,
                 "The path was not found, maybe you didn't specify it",
-            ));
+            ))
         }
     }
 }
@@ -222,11 +221,9 @@ pub struct WatcherOutcome {
 
 impl From<inotify::Event<&OsStr>> for WatcherOutcome {
     fn from(event: inotify::Event<&OsStr>) -> Self {
-        let name = if let Some(inner_name) = event.name {
-            Some(inner_name.to_string_lossy().to_string())
-        } else {
-            Option::None
-        };
+        let name = event
+            .name
+            .map(|inner_name| inner_name.to_string_lossy().to_string());
 
         Self {
             descriptor: event.wd.get_watch_descriptor_id(),

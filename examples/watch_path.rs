@@ -7,7 +7,14 @@ fn main() {
         let watch_options =
             WatchMask::MODIFY | WatchMask::CREATE | WatchMask::DELETE | WatchMask::DELETE_SELF;
 
-        smol::spawn(FsWatcher::new(sender).path("Foo").watch(watch_options)).detach();
+        smol::spawn(async move {
+            FsWatcher::new(sender)
+                .path("Foo")
+                .watch(watch_options)
+                .await
+                .unwrap();
+        })
+        .detach();
 
         while let Ok(data) = receiver.recv().await {
             dbg!(data);
