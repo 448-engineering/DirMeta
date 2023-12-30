@@ -8,6 +8,15 @@ pub use utils::*;
 mod fs;
 pub use fs::*;
 
+#[cfg(feature = "time")]
+mod watcher;
+/// This directory inherits most types from `inotify` crate
+#[cfg(feature = "time")]
+pub use watcher::*;
+
+#[cfg(feature = "watcher")]
+pub use async_dup;
+
 pub use async_recursion;
 pub use byte_prefix;
 #[cfg(feature = "time")]
@@ -15,6 +24,8 @@ pub use chrono;
 pub use file_format;
 #[cfg(feature = "time")]
 pub use humantime;
+#[cfg(feature = "watcher")]
+pub use inotify;
 pub use smol;
 pub use tai64;
 
