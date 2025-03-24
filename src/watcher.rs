@@ -1,5 +1,6 @@
+use async_channel::Sender;
+
 use inotify::{EventMask, Inotify, WatchMask};
-use smol::{channel::Sender, io};
 use std::{
     ffi::OsStr,
     path::{Path, PathBuf},
@@ -66,7 +67,7 @@ impl FsWatcher {
 
     /// Watch the path using the parameters from `inotify::WatchMask`
     /// which can be concatenated `WatchMask::MODIFY | WatchMask::CREATE | WatchMask::DELETE`
-    pub async fn watch(self, watch_for: WatchMask) -> io::Result<()> {
+    pub async fn watch(self, watch_for: WatchMask) -> futures_lite::io::Result<()> {
         if let Some(path) = self.path {
             let mut inotify = Inotify::init()?;
 
@@ -83,13 +84,16 @@ impl FsWatcher {
                     let outcome: WatcherOutcome = event.into();
 
                     if self.sender.clone().send(outcome).await.is_err() {
-                        return Err(io::Error::new(io::ErrorKind::Other, SENDER_CHANNEL_ERROR));
+                        return Err(futures_lite::io::Error::new(
+                            futures_lite::io::ErrorKind::Other,
+                            SENDER_CHANNEL_ERROR,
+                        ));
                     }
                 }
             }
         } else {
-            Err(io::Error::new(
-                io::ErrorKind::NotFound,
+            Err(futures_lite::io::Error::new(
+                futures_lite::io::ErrorKind::NotFound,
                 "The path was not found, maybe you didn't specify it",
             ))
         }

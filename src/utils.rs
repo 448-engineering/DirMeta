@@ -2,22 +2,28 @@
 use chrono::{DateTime, Utc};
 #[cfg(feature = "time")]
 use std::time::Duration;
-use std::{borrow::Cow, time::SystemTime};
+
+#[cfg(feature = "time")]
+use std::time::SystemTime;
+
+#[cfg(feature = "time")]
 use tai64::Tai64N;
 
 /// Reusable Clone-on-Write str with lifetime of `'a`
-pub type CowStr<'a> = Cow<'a, str>;
+pub type CowStr<'a> = std::borrow::Cow<'a, str>;
 
 /// A convenience struct to access utilities
 pub struct FsUtils;
 
 impl FsUtils {
     /// Returns [Option::None] if time query is not supported
+    #[cfg(feature = "time")]
     pub fn maybe_time(time_result: Option<SystemTime>) -> Option<Tai64N> {
         time_result.map(|time| Tai64N::from_system_time(&time))
     }
 
     /// Calculate the size in bytes
+    #[cfg(feature = "size")]
     pub fn size_to_bytes(bytes: usize) -> String {
         byte_prefix::calc_bytes(bytes as f32)
     }

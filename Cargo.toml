@@ -13,7 +13,7 @@ repository = "https://github.com/448-engineering/DirMeta.git"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-file-format = { version = "0.23.0", features = [
+file-format = { version = "0.26.0", optional = true, features = [
     "reader",
     "reader-asf",
     "reader-cfb",
@@ -25,17 +25,34 @@ file-format = { version = "0.23.0", features = [
     "reader-txt",
     "reader-xml",
     "reader-zip",
-
 ] }
-async-recursion = "1.0.5"
-byte_prefix = "1.0.0"
-tai64 = "4.0.0"
-chrono = { version = "0.4.31", optional = true }
-humantime = { version = "2.1.0", optional = true }
-smol = "2.0.0"
-inotify = { version = "0.10.2", default-features = false, optional = true }
+async-recursion = { version = "1.1.1", optional = true }
+byte_prefix = { version = "1.0.0", optional = true }
+tai64 = { version = "4.1.0", optional = true }
+chrono = { version = "0.4.40", optional = true }
+humantime = { version = "2.2.0", optional = true }
+inotify = { version = "0.11.0", default-features = false, optional = true }
+async-fs = { version = "2.1.2", default-features = false, optional = true }
+futures-lite = { version = "2.6.0", default-features = false, optional = true }
+async-io = { version = "2.4.0", default-features = false, optional = true }
+blocking = { version = "1.6.1", optional = true }
+async-channel = { version = "2.3.1", optional = true }
 
 [features]
-default = ["time", "watcher"]
-time = ["dep:chrono", "dep:humantime"]
-watcher = ["dep:inotify"]
+default = ["time", "size", "extra", "file-type"]
+time = ["dep:chrono", "dep:humantime", "dep:tai64"]
+watcher = ["dep:inotify", "dep:async-channel", "dep:futures-lite"]
+async = [
+    "dep:async-recursion",
+    "dep:async-io",
+    "dep:futures-lite",
+    "dep:blocking",
+    "dep:async-fs",
+]
+sync = []
+size = ["dep:byte_prefix", "extra"]
+file-type = ["dep:file-format"]
+extra = []
+
+[dev-dependencies]
+smol = "2.0.2"
