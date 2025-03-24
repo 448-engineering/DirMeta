@@ -25,7 +25,8 @@ dir-meta = {version = "*", default-features = false} #deactivate methods for con
 ```rust
 smol::block_on(async {
             // Read a directory
-            let outcome = dir_meta::DirMetadata::new("src").dir_metadata().await.unwrap();
+            // With feature `async` enabled using `cargo add dir-meta --features async`
+            let outcome = dir_meta::DirMetadata::new("src").async_dir_metadata().await.unwrap();
 
             dbg!(&outcome);
 
