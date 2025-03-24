@@ -56,3 +56,6 @@ extra = []
 
 [dev-dependencies]
 smol = "2.0.2"
+
+[package.metadata.docs.rs]
+features = ["sync", "async"]

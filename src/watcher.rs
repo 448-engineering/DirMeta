@@ -160,7 +160,7 @@ pub enum WatcherEvents {
     /// Watch was removed
     ///
     /// This event will be generated, if the watch was removed explicitly
-    /// (via [`Watches::remove`]), or automatically (because the file was
+    /// (via [`inotify::Watches::remove`]), or automatically (because the file was
     /// deleted or the file system was unmounted).
     Ignored,
     /// Event related to a directory
@@ -175,7 +175,7 @@ pub enum WatcherEvents {
     /// File system was unmounted
     ///
     /// The file system that contained the watched object has been
-    /// unmounted. An event with [`WatchMask::IGNORED`] will subsequently be
+    /// unmounted. An event with [`EventMask::IGNORED`] will subsequently be
     /// generated for the same watch descriptor.
     Unmount,
     /// Current event is unsupported

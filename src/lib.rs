@@ -8,10 +8,10 @@ pub use utils::*;
 mod fs;
 pub use fs::*;
 
-#[cfg(all(feature = "sync", feature = "async"))]
+#[cfg(all(not(doc), feature = "sync", feature = "async"))]
 compile_error!("Features 'sync' and 'async' cannot be enabled at the same time.");
 
-#[cfg(all(feature = "sync", feature = "watcher"))]
+#[cfg(all(not(doc), feature = "sync", feature = "watcher"))]
 compile_error!("`watcher` feature can only be compiled with `async` feature.");
 
 #[cfg(feature = "watcher")]

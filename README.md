@@ -22,35 +22,68 @@ This crate adds the ability to recursively walk through a directory in an async 
 dir-meta = {version = "*", default-features = false} #deactivate methods for converting timestamps to human readable formats in local time setting `default-features` to `false`
 ```
 
+- Compiling with `async` feature to enable asynchronously reading a directory
 ```rust
+#[cfg(feature="async")]
 smol::block_on(async {
-            // Read a directory
-            // With feature `async` enabled using `cargo add dir-meta --features async`
-            let outcome = dir_meta::DirMetadata::new("src").async_dir_metadata().await.unwrap();
+    // Read a directory
+    // With feature `async` enabled using `cargo add dir-meta --features async`
+    let outcome = dir_meta::DirMetadata::new("src").async_dir_metadata().await.unwrap();
 
-            dbg!(&outcome);
+    dbg!(&outcome);
 
-            // Get size of directory formatted as human readable
-            dbg!(outcome.size_formatted());
+    // Get size of directory formatted as human readable
+    dbg!(outcome.size_formatted());
 
-            // Iterate over the files
-            
-            for file in outcome.files() {
-                dbg!(&file.name()); //Get file name
-                dbg!(&file.accessed_24hr()); // Get last accessed time in 24 hour format
-                dbg!(file.accessed_am_pm()); //Get last accessed time in 12 hour format
-                dbg!(&file.accessed_humatime()); //Get last accessed time based on duration since current time
-                dbg!(&file.created_24hr());  //Get last created time in 24 hour format
-                dbg!(&file.created_am_pm()); //Get last created time in 24 hour format
-                dbg!(&file.created_humatime()); //Get last created time based on duration since current time
-                dbg!(&file.modified_24hr()); //Get last modified time in 24 hour format
-                dbg!(&file.modified_am_pm()); //Get last modified time in 24 hour format
-                dbg!(&file.modified_humatime()); //Get last modified time based on duration since current time
-                dbg!(file.formatted_size()); // Get the size of the file in human formatted size 
-                dbg!(file.file_format()); // Get the format of the file eg (PDF)
-            }
-            
-        })
+    // Iterate over the files
+    
+    for file in outcome.files() {
+        dbg!(&file.name()); //Get file name
+        dbg!(&file.accessed_24hr()); // Get last accessed time in 24 hour format
+        dbg!(file.accessed_am_pm()); //Get last accessed time in 12 hour format
+        dbg!(&file.accessed_humatime()); //Get last accessed time based on duration since current time
+        dbg!(&file.created_24hr());  //Get last created time in 24 hour format
+        dbg!(&file.created_am_pm()); //Get last created time in 24 hour format
+        dbg!(&file.created_humatime()); //Get last created time based on duration since current time
+        dbg!(&file.modified_24hr()); //Get last modified time in 24 hour format
+        dbg!(&file.modified_am_pm()); //Get last modified time in 24 hour format
+        dbg!(&file.modified_humatime()); //Get last modified time based on duration since current time
+        dbg!(file.formatted_size()); // Get the size of the file in human formatted size 
+        dbg!(file.file_format()); // Get the format of the file eg (PDF)
+    }
+    
+})
+```
+- Compiling with `sync` feature to enable synchronously reading a directory
+```rust
+#[cfg(feature="sync")]
+{
+    // Read a directory
+    // With feature `sync` enabled using `cargo add dir-meta --features sync`
+    let outcome = dir_meta::DirMetadata::new("src").sync_dir_metadata().unwrap();
+
+    dbg!(&outcome);
+
+    // Get size of directory formatted as human readable
+    dbg!(outcome.size_formatted());
+
+    // Iterate over the files
+
+    for file in outcome.files() {
+        dbg!(&file.name()); //Get file name
+        dbg!(&file.accessed_24hr()); // Get last accessed time in 24 hour format
+        dbg!(file.accessed_am_pm()); //Get last accessed time in 12 hour format
+        dbg!(&file.accessed_humatime()); //Get last accessed time based on duration since current time
+        dbg!(&file.created_24hr());  //Get last created time in 24 hour format
+        dbg!(&file.created_am_pm()); //Get last created time in 24 hour format
+        dbg!(&file.created_humatime()); //Get last created time based on duration since current time
+        dbg!(&file.modified_24hr()); //Get last modified time in 24 hour format
+        dbg!(&file.modified_am_pm()); //Get last modified time in 24 hour format
+        dbg!(&file.modified_humatime()); //Get last modified time based on duration since current time
+        dbg!(file.formatted_size()); // Get the size of the file in human formatted size 
+        dbg!(file.file_format()); // Get the format of the file eg (PDF)
+    }
+}
 ```
 
 ##### LICENSE
