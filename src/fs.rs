@@ -26,7 +26,16 @@ use crate::DateTimeString;
 /// use dir_meta::DirMetadata;
 ///
 /// // With feature `async` enabled using `cargo add dir-meta --features async`
-/// let dir = DirMetadata::new("/path/to/directory").async_dir_metadata();
+/// #[cfg(feature = "async")]
+/// {
+///     let dir = DirMetadata::new("/path/to/directory").async_dir_metadata();
+/// }
+///
+/// // With feature `sync` enabled using `cargo add dir-meta --features sync`
+/// #[cfg(feature = "sync")]
+/// {
+///     let dir = DirMetadata::new("/path/to/directory").sync_dir_metadata();
+/// }
 /// ```
 #[derive(Debug, PartialEq, Eq, Default, Clone)]
 pub struct DirMetadata<'a> {
@@ -515,7 +524,9 @@ mod sanity_checks {
     #[test]
     fn async_features() {
         smol::block_on(async {
-            let outcome = crate::DirMetadata::new("src")
+            let dir = String::from(env!("CARGO_MANIFEST_DIR")) + "/src";
+
+            let outcome = crate::DirMetadata::new(&dir)
                 .async_dir_metadata()
                 .await
                 .unwrap();
@@ -544,38 +555,38 @@ mod sanity_checks {
     fn sync_features() {
         use file_format::FileFormat;
 
-        smol::block_on(async {
-            let outcome = crate::DirMetadata::new("src").sync_dir_metadata().unwrap();
+        let dir = String::from(env!("CARGO_MANIFEST_DIR")) + "/src";
 
-            {
-                #[cfg(feature = "time")]
-                for file in outcome.files() {
-                    assert_ne!("", file.name());
-                    assert_ne!(Option::None, file.accessed_24hr());
-                    assert_ne!(Option::None, file.accessed_am_pm());
-                    assert_ne!(Option::None, file.accessed_humatime());
-                    assert_ne!(Option::None, file.created_24hr());
-                    assert_ne!(Option::None, file.created_am_pm());
-                    assert_ne!(Option::None, file.created_humatime());
-                    assert_ne!(Option::None, file.modified_24hr());
-                    assert_ne!(Option::None, file.modified_am_pm());
-                    assert_ne!(Option::None, file.modified_humatime());
-                    assert_ne!(String::default(), file.formatted_size());
-                }
-            }
+        let outcome = crate::DirMetadata::new(&dir).sync_dir_metadata().unwrap();
 
-            #[cfg(feature = "extra")]
-            {
-                assert!(outcome.size() > 0usize);
+        {
+            #[cfg(feature = "time")]
+            for file in outcome.files() {
+                assert_ne!("", file.name());
+                assert_ne!(Option::None, file.accessed_24hr());
+                assert_ne!(Option::None, file.accessed_am_pm());
+                assert_ne!(Option::None, file.accessed_humatime());
+                assert_ne!(Option::None, file.created_24hr());
+                assert_ne!(Option::None, file.created_am_pm());
+                assert_ne!(Option::None, file.created_humatime());
+                assert_ne!(Option::None, file.modified_24hr());
+                assert_ne!(Option::None, file.modified_am_pm());
+                assert_ne!(Option::None, file.modified_humatime());
+                assert_ne!(String::default(), file.formatted_size());
             }
+        }
 
-            #[cfg(feature = "file-type")]
-            {
-                let path = String::from(env!("CARGO_MANIFEST_DIR")) + "/src";
-                let file = outcome.get_file_by_path(&path);
-                assert!(file.is_some());
-                assert_eq!(file.unwrap().file_format(), &FileFormat::PlainText);
-            }
-        })
+        #[cfg(feature = "extra")]
+        {
+            assert!(outcome.size() > 0usize);
+        }
+
+        #[cfg(feature = "file-type")]
+        {
+            let path = dir.clone() + "/lib.rs";
+            let file = outcome.get_file_by_path(&path);
+            assert!(file.is_some());
+            assert_eq!(file.unwrap().file_format(), &FileFormat::PlainText);
+        }
     }
 }
